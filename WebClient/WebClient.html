@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web client</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" crossorigin="anonymous">
+    <style>
+        #sortable {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 60%;
+        }
+
+        body {
+            text-align: center
+        }
+
+        #sortable li {
+            cursor: move;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
+    <script>
+        $(function () {
+            $("#sortable").sortable();
+            $("#sortable").disableSelection();
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="demo">
+                    <ul id="sortable" class="ui-sortable list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCTi9F3o1gl6ytvOzOqp20vjXX7omDstGU",
+        authDomain: "win10-and-web-app.firebaseapp.com",
+        databaseURL: "https://win10-and-web-app.firebaseio.com",
+        projectId: "win10-and-web-app",
+        storageBucket: "win10-and-web-app.appspot.com",
+        messagingSenderId: "869443544420"
+    };
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    var data = {};
+    database.ref().on('value', function (snap) {
+        data = snap.val().dataSample;
+        jsonToList(data);
+    });
+
+    function jsonToList(data) {
+        clearList('#sortable');
+        $.each(data, function (key, val) {
+            $('#sortable').append($('<li>').text(val.Field1 + ' ' + val.Field2 + ' ' + val.Field3));
+        });
+    }
+
+    function ListToJson(el, separator) {
+        items = [];
+        $(el).children().each(function () {
+            var $this = $(this);
+            var objectFields = $this.html().split(separator);
+            var item = { Field1: objectFields[0], Field2: objectFields[1], Field3: objectFields[2] };
+            items.push(item);
+        });
+        data = { dataSample: items};
+    }
+
+    function clearList(el) {
+        $.each(data, function (key, val) {
+            $(el + ' li').remove();
+        });
+    }
+
+    function setToDatabase(data) {
+        database.ref().set(data);
+    }
+
+    $(function () {
+        $('#sortable').sortable({
+            start: function (event, ui) {
+                var start_pos = ui.item.index();
+                ui.item.data('start_pos', start_pos);
+            },
+            change: function (event, ui) {
+                var start_pos = ui.item.data('start_pos');
+                var index = ui.placeholder.index();
+                if (start_pos < index) {
+                    $('#sortable li:nth-child(' + index + ')').addClass('list-group-item-success');
+                } else {
+                    $('#sortable li:eq(' + (index + 1) + ')').addClass('list-group-item-success');
+                }
+            },
+            update: function (event, ui) {
+                $('#sortable li').removeClass('list-group-item-success');
+                ListToJson('#sortable', ' ');
+                setToDatabase(data);
+            },
+        });
+    });
+
+</script>
