@@ -70,15 +70,15 @@
                 var start_pos = ui.item.data('start_pos');
                 var index = ui.placeholder.index();
                 if (start_pos < index) {
-                    $(listId +' li:nth-child(' + index + ')').addClass('list-group-item-success');
+                    $(listId + ' li:nth-child(' + index + ')').addClass('list-group-item-success');
                 } else {
-                    $(listId +' li:eq(' + (index + 1) + ')').addClass('list-group-item-success');
+                    $(listId + ' li:eq(' + (index + 1) + ')').addClass('list-group-item-success');
                 }
             },
             update: function (event, ui) {
-                $(listId +' li').removeClass('list-group-item-success');
+                $(listId + ' li').removeClass('list-group-item-success');
                 data = ListToJson(listId, ' ');
-                setToDatabase(database, { dataSample: data } );
+                setToDatabase(database, { dataSample: data });
             },
         });
     });
