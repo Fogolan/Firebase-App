@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Win10UniversalClient.Entities;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -18,7 +20,7 @@ namespace Win10UniversalClient
     public sealed partial class MainPage : Page
     {
         CoreDispatcher _dispatcher;
-        ObservableCollection<DataSample> _items;
+        ObservableCollection<DataSample> ListItems;
         FirebaseApp _app;
 
         public MainPage()
@@ -26,34 +28,39 @@ namespace Win10UniversalClient
             this.InitializeComponent();
             _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
             _app = new FirebaseApp(new Uri("https://win10-and-web-app.firebaseio.com/"));
+            ListItems = new ObservableCollection<DataSample>();
         }
 
         private void AddOrUpdate(IDataSnapshot snap)
         {
             var ignored = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                PaintItem(snap);
+                PrintItems(snap);
             });
         }
 
-        private void PaintItem(IDataSnapshot snap)
+        private void PrintItems(IDataSnapshot snap)
         {
-            _items = JsonConvert.DeserializeObject<ObservableCollection<DataSample>>(snap.Value());
-            DataList.ItemsSource = _items;
+            ObservableCollection<DataSample> _firebaseItems = JsonConvert.DeserializeObject<ObservableCollection<DataSample>>(snap.Value());
+            if (!_firebaseItems.SequenceEqual(ListItems))
+            {
+                ListItems = _firebaseItems;
+                DataList.ItemsSource = ListItems;
+            }
         }
 
         private void Grid_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            _items.CollectionChanged += Items_CollectionChanged;
             var scoresRef = _app.Child("dataSample")
                 .On("child_changed", (snap, previous_child, context) => AddOrUpdate(snap));
             scoresRef = _app.Child("dataSample")
                 .On("value", (snap, previous_child, context) => AddOrUpdate(snap));
         }
 
-        private static void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void DataList_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
-            
+            var data = JsonConvert.SerializeObject(ListItems);
+            _app.Child("dataSample").Set(data);
         }
     }
 }

@@ -8,8 +8,8 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Grid_Loaded">
-        <ListView Name="DataList" HorizontalAlignment="Left" Height="620" Margin="10,10,0,0" VerticalAlignment="Top" Width="340"
-                  CanReorderItems="True" CanDrag="True" AllowDrop="True">
+        <ListView x:Name="DataList" HorizontalAlignment="Left" Height="620" Margin="13,10,0,0" VerticalAlignment="Top" Width="340"
+                  CanReorderItems="True" AllowDrop="True" CanDragItems="True" ReorderMode="Enabled" CanDrag="True" DragItemsCompleted="DataList_DragItemsCompleted" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Width="340">
