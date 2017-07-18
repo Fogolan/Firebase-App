@@ -29,19 +29,19 @@ namespace Win10UniversalClient
         {
             this.InitializeComponent();
             _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-            _app = new FirebaseApp(new Uri("https://win10-and-web-app.firebaseio.com/"));
+            _app = new FirebaseApp(new Uri("https://win10-and-web-app.firebaseio.com/")); //Initialize Firebase instance with your Firebase Url
         }
 
         private void Grid_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var scoresRef = _app.Child("dataSample")
-                .On("value", (snap, previous_child, context) => AddOrUpdate(snap));
+            var scoresRef = _app.Child("dataSample") //Your data start node name
+                .On("value", (snap, previous_child, context) => AddOrUpdate(snap)); //Subscribe to changing data in Firebase
         }
 
         private void DataList_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
         {
             var data = JsonConvert.SerializeObject(DataList.Items);
-            _app.Child("dataSample").Set(data);
+            _app.Child("dataSample").Set(data); //send data to Firebase
         }
 
         private void AddOrUpdate(IDataSnapshot snap)
@@ -56,11 +56,11 @@ namespace Win10UniversalClient
         {
             List<DataSample> _firebaseItems = JsonConvert.DeserializeObject<List<DataSample>>(snap.Value());
             AnimateRows(GetDifferentFromFirebase(_firebaseItems));
-            if (DataList.Items.Count == 0)
+            if (DataList.Items.Count == 0) //When you start app, your DataList is empty
                 InitializeDataListView(_firebaseItems);
         }
 
-        private List<DataSample> GetDifferentFromFirebase(List<DataSample> firebaseItems)
+        private List<DataSample> GetDifferentFromFirebase(List<DataSample> firebaseItems) //You need to know, what rows have changed
         {
             var different = new List<DataSample>();
             foreach (var item in DataList.Items)

@@ -25,6 +25,8 @@
     </style>
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+    <!--This lib provides drag and drop items in list with touchscreen-->
+
     <script src="jquery.ui.touch-punch.min.js"></script>
     <script>
         $(function () {
@@ -55,30 +57,17 @@
     var database = initializeFirebase();
     var data = {};
     var listId = '#sortable';
-    database.ref().on('value', function (snap) {
+    database.ref().on('value', function (snap) { //Subscribe to changing data by Firebase
         data = snap.val().dataSample;
         jsonToList(data, listId);
     });
 
     $(function () {
         $(listId).sortable({
-            start: function (event, ui) {
-                var start_pos = ui.item.index();
-                ui.item.data('start_pos', start_pos);
-            },
-            change: function (event, ui) {
-                var start_pos = ui.item.data('start_pos');
-                var index = ui.placeholder.index();
-                if (start_pos < index) {
-                    $(listId + ' li:nth-child(' + index + ')').addClass('list-group-item-success');
-                } else {
-                    $(listId + ' li:eq(' + (index + 1) + ')').addClass('list-group-item-success');
-                }
-            },
             update: function (event, ui) {
                 $(listId + ' li').removeClass('list-group-item-success');
                 data = ListToJson(listId, ' ');
-                setToDatabase(database, { dataSample: data });
+                setToDatabase(database, { dataSample: data }); //When list updating, we send it to Firebase
             },
         });
     });
