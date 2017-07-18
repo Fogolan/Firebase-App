@@ -14,7 +14,7 @@ function initializeFirebase() {
 function jsonToList(data, el) {
     clearList(el);
     $.each(data, function (key, val) {
-        $(el).append($('<li>').text(val.Field1 + ' ' + val.Field2 + ' ' + val.Field3));
+        $(el).append($('<li>').text(val.Field1 + ' ' + val.Field2 + ' ' + val.Field3).attr('id', val.Id));
     });
 }
 
@@ -23,7 +23,7 @@ function ListToJson(el, separator) {
     $(el).children().each(function () {
         var $this = $(this);
         var objectFields = $this.html().split(separator);
-        var item = { Field1: objectFields[0], Field2: objectFields[1], Field3: objectFields[2] };
+        var item = { Id: $this.attr('id'), Field1: objectFields[0], Field2: objectFields[1], Field3: objectFields[2] };
         items.push(item);
     });
     return items;
