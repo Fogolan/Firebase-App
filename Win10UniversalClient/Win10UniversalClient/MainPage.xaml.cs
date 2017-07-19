@@ -99,7 +99,7 @@ namespace Win10UniversalClient
                 BeginTime = TimeSpan.FromMilliseconds(300)
             };
             var keyFrame1 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)), Value = Colors.White };
-            var keyFrame2 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400)), Value = Colors.LightGray };
+            var keyFrame2 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400)), Value = Colors.Red };
             var keyFrame3 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1200)), Value = Colors.White };
             colorAnimation.KeyFrames.Add(keyFrame1);
             colorAnimation.KeyFrames.Add(keyFrame2);
