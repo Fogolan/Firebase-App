@@ -5,25 +5,25 @@ using Windows.UI.Core;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using Win10UniversalClient.Entities;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using Windows.UI.Xaml.Media;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
+using Windows.Storage;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Win10UniversalClient
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         CoreDispatcher _dispatcher;
         FirebaseApp _app;
+        private string _displayName = null;
+        public static ApplicationDataContainer _settings = ApplicationData.Current.RoamingSettings;
 
         public MainPage()
         {
@@ -32,7 +32,7 @@ namespace Win10UniversalClient
             _app = new FirebaseApp(new Uri("https://win10-and-web-app.firebaseio.com/")); //Initialize Firebase instance with your Firebase Url
         }
 
-        private void Grid_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             var scoresRef = _app.Child("dataSample") //Your data start node name
                 .On("value", (snap, previous_child, context) => AddOrUpdate(snap)); //Subscribe to changing data in Firebase
@@ -86,7 +86,7 @@ namespace Win10UniversalClient
         {
             foreach (var item in different)
             {
-                var index = DataList.Items.IndexOf(DataList.Items.Where(x => x.Equals(item)).FirstOrDefault());
+                var index = DataList.Items.IndexOf(DataList.Items.FirstOrDefault(x => x.Equals(item)));
                 if (DataList.ContainerFromIndex(index) is ListViewItem ItemContainer)
                     ColorAnimation(ItemContainer);
             }
@@ -111,6 +111,83 @@ namespace Win10UniversalClient
             var storyboard = new Storyboard();
             storyboard.Children.Add(colorAnimation);
             storyboard.Begin();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!App.Current.Resources.ContainsKey("ida:ClientID"))
+            {
+                InfoText.Text = ResourceLoader.GetForCurrentView().GetString("NoClientIdMessage");
+                ConnectButton.IsEnabled = false;
+            }
+            else
+            {
+                InfoText.Text = ResourceLoader.GetForCurrentView().GetString("ConnectPrompt");
+                ConnectButton.IsEnabled = true;
+            }
+        }
+        
+        public async Task<bool> SignInCurrentUserAsync()
+        {
+            var graphClient = AuthenticationHelper.GetAuthenticatedClient();
+            try
+            {
+                if (graphClient != null)
+                {
+                    var user = await graphClient.Me.Request().GetAsync();
+                    string userId = user.Id;
+                    _displayName = user.DisplayName;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+        
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            try
+            {
+                if (await SignInCurrentUserAsync())
+                {
+                    InfoText.Text = "Hi " + _displayName + "," + Environment.NewLine +
+                                    ResourceLoader.GetForCurrentView().GetString("SendMailPrompt");
+                    DataList.IsEnabled = true;
+                    DataList.Visibility = Visibility.Visible;
+                    ConnectButton.Visibility = Visibility.Collapsed;
+                    DisconnectButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    InfoText.Text = ResourceLoader.GetForCurrentView().GetString("AuthenticationErrorMessage");
+                }
+
+                ProgressBar.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void Disconnect_Click(object sender, RoutedEventArgs e)
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            AuthenticationHelper.SignOut();
+            ProgressBar.Visibility = Visibility.Collapsed;
+            DataList.IsEnabled = false;
+            DataList.Visibility = Visibility.Collapsed;
+            ConnectButton.Visibility = Visibility.Visible;
+            InfoText.Text = ResourceLoader.GetForCurrentView().GetString("ConnectPrompt");
+            this._displayName = null;
         }
     }
 }
