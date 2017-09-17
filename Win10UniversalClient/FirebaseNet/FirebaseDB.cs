@@ -5,103 +5,100 @@ namespace FirebaseNet
 {
     public class FirebaseDb
     {
-        public class FirebaseDB
+        /// <summary>  
+        /// Initializes a new instance of the <see cref="FirebaseDB"/> class with base url of Firebase Database  
+        /// </summary>  
+        /// <param name="baseURL">Firebase Database URL</param>  
+        public FirebaseDb(string baseURL)
         {
-            /// <summary>  
-            /// Initializes a new instance of the <see cref="FirebaseDB"/> class with base url of Firebase Database  
-            /// </summary>  
-            /// <param name="baseURL">Firebase Database URL</param>  
-            public FirebaseDB(string baseURL)
+            this.RootNode = baseURL;
+        }
+
+        /// <summary>  
+        /// Gets or sets Represents current full path of a Firebase Database resource  
+        /// </summary>  
+        private string RootNode { get; set; }
+
+        /// <summary>  
+        /// Adds more node to base URL  
+        /// </summary>  
+        /// <param name="node">Single node of Firebase DB</param>  
+        /// <returns>Instance of FirebaseDB</returns>  
+        public FirebaseDb Node(string node)
+        {
+            if (node.Contains("/"))
             {
-                this.RootNode = baseURL;
+                throw new FormatException("Node must not contain '/', use NodePath instead.");
             }
 
-            /// <summary>  
-            /// Gets or sets Represents current full path of a Firebase Database resource  
-            /// </summary>  
-            private string RootNode { get; set; }
+            return new FirebaseDb(this.RootNode + '/' + node);
+        }
 
-            /// <summary>  
-            /// Adds more node to base URL  
-            /// </summary>  
-            /// <param name="node">Single node of Firebase DB</param>  
-            /// <returns>Instance of FirebaseDB</returns>  
-            public FirebaseDB Node(string node)
-            {
-                if (node.Contains("/"))
-                {
-                    throw new FormatException("Node must not contain '/', use NodePath instead.");
-                }
+        /// <summary>  
+        /// Adds more nodes to base URL  
+        /// </summary>  
+        /// <param name="nodePath">Nodepath of Firebase DB</param>  
+        /// <returns>Instance of FirebaseDB</returns>  
+        public FirebaseDb NodePath(string nodePath)
+        {
+            return new FirebaseDb(this.RootNode + '/' + nodePath);
+        }
 
-                return new FirebaseDB(this.RootNode + '/' + node);
-            }
+        /// <summary>  
+        /// Make Get request  
+        /// </summary>  
+        /// <returns>Firebase Response</returns>  
+        public FirebaseResponse Get()
+        {
+            return new FirebaseRequest(HttpMethod.Get, this.RootNode).Execute();
+        }
 
-            /// <summary>  
-            /// Adds more nodes to base URL  
-            /// </summary>  
-            /// <param name="nodePath">Nodepath of Firebase DB</param>  
-            /// <returns>Instance of FirebaseDB</returns>  
-            public FirebaseDB NodePath(string nodePath)
-            {
-                return new FirebaseDB(this.RootNode + '/' + nodePath);
-            }
+        /// <summary>  
+        /// Make Put request  
+        /// </summary>  
+        /// <param name="jsonData">JSON string to PUT</param>  
+        /// <returns>Firebase Response</returns>  
+        public FirebaseResponse Put(string jsonData)
+        {
+            return new FirebaseRequest(HttpMethod.Put, this.RootNode, jsonData).Execute();
+        }
 
-            /// <summary>  
-            /// Make Get request  
-            /// </summary>  
-            /// <returns>Firebase Response</returns>  
-            public FirebaseResponse Get()
-            {
-                return new FirebaseRequest(HttpMethod.Get, this.RootNode).Execute();
-            }
+        /// <summary>  
+        /// Make Post request  
+        /// </summary>  
+        /// <param name="jsonData">JSON string to POST</param>  
+        /// <returns>Firebase Response</returns>  
+        public FirebaseResponse Post(string jsonData)
+        {
+            return new FirebaseRequest(HttpMethod.Post, this.RootNode, jsonData).Execute();
+        }
 
-            /// <summary>  
-            /// Make Put request  
-            /// </summary>  
-            /// <param name="jsonData">JSON string to PUT</param>  
-            /// <returns>Firebase Response</returns>  
-            public FirebaseResponse Put(string jsonData)
-            {
-                return new FirebaseRequest(HttpMethod.Put, this.RootNode, jsonData).Execute();
-            }
+        /// <summary>  
+        /// Make Patch request  
+        /// </summary>  
+        /// <param name="jsonData">JSON sting to PATCH</param>  
+        /// <returns>Firebase Response</returns>  
+        public FirebaseResponse Patch(string jsonData)
+        {
+            return new FirebaseRequest(new HttpMethod("PATCH"), this.RootNode, jsonData).Execute();
+        }
 
-            /// <summary>  
-            /// Make Post request  
-            /// </summary>  
-            /// <param name="jsonData">JSON string to POST</param>  
-            /// <returns>Firebase Response</returns>  
-            public FirebaseResponse Post(string jsonData)
-            {
-                return new FirebaseRequest(HttpMethod.Post, this.RootNode, jsonData).Execute();
-            }
+        /// <summary>  
+        /// Make Delete request  
+        /// </summary>  
+        /// <returns>Firebase Response</returns>  
+        public FirebaseResponse Delete()
+        {
+            return new FirebaseRequest(HttpMethod.Delete, this.RootNode).Execute();
+        }
 
-            /// <summary>  
-            /// Make Patch request  
-            /// </summary>  
-            /// <param name="jsonData">JSON sting to PATCH</param>  
-            /// <returns>Firebase Response</returns>  
-            public FirebaseResponse Patch(string jsonData)
-            {
-                return new FirebaseRequest(new HttpMethod("PATCH"), this.RootNode, jsonData).Execute();
-            }
-
-            /// <summary>  
-            /// Make Delete request  
-            /// </summary>  
-            /// <returns>Firebase Response</returns>  
-            public FirebaseResponse Delete()
-            {
-                return new FirebaseRequest(HttpMethod.Delete, this.RootNode).Execute();
-            }
-
-            /// <summary>  
-            /// To String  
-            /// </summary>  
-            /// <returns>Current resource URL as string</returns>  
-            public override string ToString()
-            {
-                return this.RootNode;
-            }
+        /// <summary>  
+        /// To String  
+        /// </summary>  
+        /// <returns>Current resource URL as string</returns>  
+        public override string ToString()
+        {
+            return this.RootNode;
         }
     }
 }
