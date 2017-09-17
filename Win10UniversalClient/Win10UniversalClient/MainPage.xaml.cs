@@ -4,8 +4,10 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Core;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Win10UniversalClient.Entities;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -24,18 +26,31 @@ namespace Win10UniversalClient
         FirebaseApp _app;
         private string _displayName = null;
         public static ApplicationDataContainer _settings = ApplicationData.Current.RoamingSettings;
+        public bool isEditEnable = false;
+
+        private int previousSelectedIndex = -1;
+
+        public int PreviousSelectedIndex
+        {
+            get { return previousSelectedIndex; }
+
+            set { previousSelectedIndex = value; }
+        }
 
         public MainPage()
         {
             this.InitializeComponent();
             _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-            _app = new FirebaseApp(new Uri("https://win10-and-web-app.firebaseio.com/")); //Initialize Firebase instance with your Firebase Url
+            _app = new FirebaseApp(
+                new Uri(
+                    "https://win10-and-web-app.firebaseio.com/")); //Initialize Firebase instance with your Firebase Url
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             var scoresRef = _app.Child("dataSample") //Your data start node name
-                .On("value", (snap, previous_child, context) => AddOrUpdate(snap)); //Subscribe to changing data in Firebase
+                .On("value",
+                    (snap, previous_child, context) => AddOrUpdate(snap)); //Subscribe to changing data in Firebase
         }
 
         private void DataList_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
@@ -60,12 +75,14 @@ namespace Win10UniversalClient
                 InitializeDataListView(_firebaseItems);
         }
 
-        private List<DataSample> GetDifferentFromFirebase(List<DataSample> firebaseItems) //You need to know, what rows have changed
+        private List<DataSample>
+            GetDifferentFromFirebase(List<DataSample> firebaseItems) //You need to know, what rows have changed
         {
             var different = new List<DataSample>();
             foreach (var item in DataList.Items)
             {
-                if (!item.Equals(firebaseItems[DataList.Items.IndexOf(item)]))
+                var dataItem = item as DataSample;
+                if (dataItem.Id != firebaseItems[DataList.Items.IndexOf(item)].Id)
                 {
                     different.Add(firebaseItems[DataList.Items.IndexOf(item)]);
                     DataList.Items[DataList.Items.IndexOf(item)] = firebaseItems[DataList.Items.IndexOf(item)];
@@ -98,9 +115,21 @@ namespace Win10UniversalClient
             {
                 BeginTime = TimeSpan.FromMilliseconds(300)
             };
-            var keyFrame1 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)), Value = Colors.White };
-            var keyFrame2 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400)), Value = Colors.Red };
-            var keyFrame3 = new LinearColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1200)), Value = Colors.White };
+            var keyFrame1 = new LinearColorKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                Value = Colors.White
+            };
+            var keyFrame2 = new LinearColorKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400)),
+                Value = Colors.Red
+            };
+            var keyFrame3 = new LinearColorKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1200)),
+                Value = Colors.White
+            };
             colorAnimation.KeyFrames.Add(keyFrame1);
             colorAnimation.KeyFrames.Add(keyFrame2);
             colorAnimation.KeyFrames.Add(keyFrame3);
@@ -126,7 +155,7 @@ namespace Win10UniversalClient
                 ConnectButton.IsEnabled = true;
             }
         }
-        
+
         public async Task<bool> SignInCurrentUserAsync()
         {
             var graphClient = AuthenticationHelper.GetAuthenticatedClient();
@@ -150,7 +179,7 @@ namespace Win10UniversalClient
             }
 
         }
-        
+
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             ProgressBar.Visibility = Visibility.Visible;
@@ -188,6 +217,61 @@ namespace Win10UniversalClient
             ConnectButton.Visibility = Visibility.Visible;
             InfoText.Text = ResourceLoader.GetForCurrentView().GetString("ConnectPrompt");
             this._displayName = null;
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            DataList.Items.Remove(DataList.SelectedItem);
+            var data = JsonConvert.SerializeObject(DataList.Items);
+            _app.Child("dataSample").Set(data); //send data to Firebase
+        }
+
+        private void DataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DeleteButton.IsEnabled = DataList.SelectedItem != null;
+            UpdateButton.IsEnabled = DataList.SelectedItem != null;
+
+            if (PreviousSelectedIndex != -1)
+            {
+                DataSample previousSelectedItem = DataList.Items[PreviousSelectedIndex] as DataSample;
+                if (previousSelectedItem != null)
+                {
+                    previousSelectedItem.IsReadOnly = true;
+                    PreviousSelectedIndex = DataList.SelectedIndex;
+                }
+            }
+        }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataSample selectedItem = DataList.SelectedItem as DataSample;
+            if (selectedItem != null)
+            {
+                PreviousSelectedIndex = DataList.SelectedIndex;
+                selectedItem.IsReadOnly = false;
+            }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var editedItem = (DataSample) DataList.SelectedItem;
+            editedItem.Field1 = UpdateTextBox.Text;
+            DataList.SelectedItem = editedItem;
+            var data = JsonConvert.SerializeObject(DataList.Items);
+            _app.Child("dataSample").Set(data); //send data to Firebase
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            isEditEnable = !isEditEnable;
+            if (isEditEnable)
+            {
+                UpdateTextBox.Visibility = SaveButton.Visibility = CancelButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                UpdateTextBox.Visibility = SaveButton.Visibility = CancelButton.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
