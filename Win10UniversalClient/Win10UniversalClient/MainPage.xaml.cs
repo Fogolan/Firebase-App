@@ -57,6 +57,15 @@ namespace Win10UniversalClient
         {
             var data = JsonConvert.SerializeObject(DataList.Items);
             _app.Child("dataSample").Set(data); //send data to Firebase
+
+            UpdateButton.IsEnabled = DataList.SelectedItem != null;
+
+            DataSample selectedItem = DataList.SelectedItem as DataSample;
+            if (selectedItem != null)
+            {
+                selectedItem.IsReadOnly = true;
+                PreviousSelectedIndex = DataList.SelectedIndex;
+            }
         }
 
         private void AddOrUpdate(IDataSnapshot snap)
@@ -228,16 +237,20 @@ namespace Win10UniversalClient
 
         private void DataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DeleteButton.IsEnabled = DataList.SelectedItem != null;
             UpdateButton.IsEnabled = DataList.SelectedItem != null;
-
             if (PreviousSelectedIndex != -1)
             {
                 DataSample previousSelectedItem = DataList.Items[PreviousSelectedIndex] as DataSample;
                 if (previousSelectedItem != null)
                 {
-                    previousSelectedItem.IsReadOnly = true;
-                    PreviousSelectedIndex = DataList.SelectedIndex;
+                    if (!previousSelectedItem.IsReadOnly)
+                    {
+                        previousSelectedItem.IsReadOnly = true;
+                        PreviousSelectedIndex = DataList.SelectedIndex;
+
+                        var data = JsonConvert.SerializeObject(DataList.Items);
+                        _app.Child("dataSample").Set(data); //send data to Firebase
+                    }
                 }
             }
         }
@@ -249,28 +262,6 @@ namespace Win10UniversalClient
             {
                 PreviousSelectedIndex = DataList.SelectedIndex;
                 selectedItem.IsReadOnly = false;
-            }
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            var editedItem = (DataSample) DataList.SelectedItem;
-            editedItem.Field1 = UpdateTextBox.Text;
-            DataList.SelectedItem = editedItem;
-            var data = JsonConvert.SerializeObject(DataList.Items);
-            _app.Child("dataSample").Set(data); //send data to Firebase
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            isEditEnable = !isEditEnable;
-            if (isEditEnable)
-            {
-                UpdateTextBox.Visibility = SaveButton.Visibility = CancelButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                UpdateTextBox.Visibility = SaveButton.Visibility = CancelButton.Visibility = Visibility.Collapsed;
             }
         }
     }
