@@ -200,6 +200,8 @@ namespace Win10UniversalClient
                                     ResourceLoader.GetForCurrentView().GetString("SendMailPrompt");
                     DataList.IsEnabled = true;
                     DataList.Visibility = Visibility.Visible;
+                    DeleteButton.Visibility = Visibility.Visible;
+                    UpdateButton.Visibility = Visibility.Visible;
                     ConnectButton.Visibility = Visibility.Collapsed;
                     DisconnectButton.Visibility = Visibility.Visible;
                 }
@@ -237,7 +239,8 @@ namespace Win10UniversalClient
 
         private void DataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateButton.IsEnabled = DataList.SelectedItem != null;
+            DeleteButton.IsEnabled = UpdateButton.IsEnabled = DataList.SelectedItem != null;
+
             if (PreviousSelectedIndex != -1)
             {
                 DataSample previousSelectedItem = DataList.Items[PreviousSelectedIndex] as DataSample;

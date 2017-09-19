@@ -21,11 +21,11 @@
         </Grid.ColumnDefinitions>
         <ProgressBar x:Name="ProgressBar" Visibility="Collapsed" Grid.Row="0" Grid.ColumnSpan="3" IsIndeterminate="True" Margin="0,3"/>
         <TextBlock Grid.Row="1" Grid.Column="1"  x:Name="InfoText" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{ThemeResource TextStyleLargeFontSize}" TextWrapping="Wrap" Width="750" Margin="0,3"/>
-        <Button Grid.Row="1" Grid.Column="1" x:Name="ConnectButton" HorizontalAlignment="Right"  Content="connect"  Click="ConnectButton_Click"/>
+        <Button Grid.Row="1" Grid.Column="1" x:Name="ConnectButton" HorizontalAlignment="Right"  Content="connect"  Click="ConnectButton_Click" RenderTransformOrigin="0.505,0.5"/>
         <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" IsEnabled="False" Margin="0,0,5,0"  HorizontalAlignment="Center"/>
-                <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" IsEnabled="False" HorizontalAlignment="Center"/>
+                <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" Visibility="Collapsed" IsEnabled="False" Margin="0,0,5,0"  HorizontalAlignment="Center"/>
+                <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" Visibility="Collapsed" IsEnabled="False" HorizontalAlignment="Center"/>
             </StackPanel>
             <ListView x:Name="DataList" HorizontalAlignment="Left" Height="620" Margin="13,10,0,0" VerticalAlignment="Top" Width="340"
                       CanReorderItems="True" AllowDrop="True" CanDragItems="True" ReorderMode="Enabled" CanDrag="True" DragItemsCompleted="DataList_DragItemsCompleted" Visibility="Collapsed" SelectionChanged="DataList_SelectionChanged" >
