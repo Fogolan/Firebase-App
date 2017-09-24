@@ -268,5 +268,17 @@ namespace Win10UniversalClient
                 selectedItem.IsEnable = true;
             }
         }
+
+        private void StyleSwitcher_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (VisualStateGroup.CurrentState.Name == "Mobile")
+            {
+                VisualStateManager.GoToState(this, "Desktop", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Mobile", true);
+            }
+        }
     }
 }
