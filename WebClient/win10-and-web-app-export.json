@@ -2,63 +2,43 @@
 	"dataSample": [
 		{
 			"Id": 1,
-			"Field1": "foo1",
-			"Field2": "01/01/2017",
-			"Field3": "1000"
+			"Field1": "foo1"
 		},
 		{
 			"Id": 2,
-			"Field1": "foo2",
-			"Field2": "02/01/2017",
-			"Field3": "2000"
+			"Field1": "foo2"
 		},
 		{
 			"Id": 3,
-			"Field1": "foo3",
-			"Field2": "03/01/2017",
-			"Field3": "3000"
+			"Field1": "foo3"
 		},
 		{
 			"Id": 4,
-			"Field1": "foo4",
-			"Field2": "04/01/2017",
-			"Field3": "4000"
+			"Field1": "foo4"
 		},
 		{
 			"Id": 5,
-			"Field1": "foo5",
-			"Field2": "05/01/2017",
-			"Field3": "5000"
+			"Field1": "foo5"
 		},
 		{
 			"Id": 6,
-			"Field1": "foo6",
-			"Field2": "06/01/2017",
-			"Field3": "6000"
+			"Field1": "foo6"
 		},
 		{
 			"Id": 7,
-			"Field1": "foo7",
-			"Field2": "07/01/2017",
-			"Field3": "7000"
+			"Field1": "foo7"
 		},
 		{
 			"Id": 8,
-			"Field1": "foo8",
-			"Field2": "08/01/2017",
-			"Field3": "8000"
+			"Field1": "foo8"
 		},
 		{
 			"Id": 9,
-			"Field1": "foo9",
-			"Field2": "09/01/2017",
-			"Field3": "9000"
+			"Field1": "foo9"
 		},
 		{
 			"Id": 10,
-			"Field1": "foo10",
-			"Field2": "10/01/2017",
-			"Field3": "10000"
+			"Field1": "foo10"
 		}
 	]
 }

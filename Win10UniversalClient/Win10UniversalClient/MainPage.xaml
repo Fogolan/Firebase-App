@@ -5,7 +5,7 @@
     xmlns:local="using:Win10UniversalClient"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Width="790" Height="640">
+    mc:Ignorable="d" Width="790" Height="640" MinWidth="700">
     <Page.Resources>
         <Style TargetType="Button" x:Key="DesktopButtonStyle">
             <Setter Property="Width" Value="80" />
@@ -62,26 +62,18 @@
                 <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" Visibility="Collapsed" IsEnabled="False"/>
                 <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" Visibility="Collapsed" IsEnabled="False"/>
             </StackPanel>
-            <ListView x:Name="DataList" HorizontalAlignment="Left" Height="620" Margin="13,10,0,0" VerticalAlignment="Top"
-                      CanReorderItems="True" AllowDrop="True" CanDragItems="True" ReorderMode="Enabled" CanDrag="True" DragItemsCompleted="DataList_DragItemsCompleted" SelectionChanged="DataList_SelectionChanged" Width="693" >
+            <ListView x:Name="DataList" HorizontalAlignment="Left" Height="620" Margin="13,10,0,0" VerticalAlignment="Top" Visibility="Collapsed"
+                      CanReorderItems="True" AllowDrop="True" CanDragItems="True" ReorderMode="Enabled" CanDrag="True" DragItemsCompleted="DataList_DragItemsCompleted" SelectionChanged="DataList_SelectionChanged" Width="700" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Text="{Binding Field1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Margin="0,0,20,8"
-                                     FontSize="16" 
-                                     FontStyle="Italic" 
-                                     FontWeight="SemiBold"
-                                     Foreground="DarkBlue"
-                                     IsReadOnly="{Binding IsReadOnly}"/>
-                            <TextBox Text="{Binding Field2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Margin="0,0,20,8"
-                                     FontSize="16" 
-                                     FontStyle="Italic" 
-                                     FontWeight="SemiBold"
-                                     Foreground="DarkBlue"
-                                     IsReadOnly="{Binding IsReadOnly}"/>
-                            <TextBox Text="{Binding Field3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox Text="{Binding Field1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     BorderThickness="0"
+                                     MaxLength="250"
+                                     Width="650"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     IsEnabled="{Binding IsEnable}"
                                      Margin="0,0,20,8"
                                      FontSize="16" 
                                      FontStyle="Italic" 

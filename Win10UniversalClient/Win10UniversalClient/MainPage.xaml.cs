@@ -248,6 +248,7 @@ namespace Win10UniversalClient
                     if (!previousSelectedItem.IsReadOnly)
                     {
                         previousSelectedItem.IsReadOnly = true;
+                        previousSelectedItem.IsEnable = false;
                         PreviousSelectedIndex = DataList.SelectedIndex;
 
                         var data = JsonConvert.SerializeObject(DataList.Items);
@@ -264,6 +265,7 @@ namespace Win10UniversalClient
             {
                 PreviousSelectedIndex = DataList.SelectedIndex;
                 selectedItem.IsReadOnly = false;
+                selectedItem.IsEnable = true;
             }
         }
     }
