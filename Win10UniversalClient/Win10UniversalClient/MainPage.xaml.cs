@@ -177,10 +177,7 @@ namespace Win10UniversalClient
                     _displayName = user.DisplayName;
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
             catch (Exception)
             {
@@ -226,6 +223,8 @@ namespace Win10UniversalClient
             DataList.IsEnabled = false;
             DataList.Visibility = Visibility.Collapsed;
             ConnectButton.Visibility = Visibility.Visible;
+            UpdateButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
             InfoText.Text = ResourceLoader.GetForCurrentView().GetString("ConnectPrompt");
             this._displayName = null;
         }
