@@ -26,7 +26,6 @@
             <Setter Property="MinWidth" Value="154"/>
             <Setter Property="ManipulationMode" Value="System,TranslateX"/>
             <Setter Property="UseSystemFocusVisuals" Value="True"/>
-            <Setter Property="FocusVisualMargin" Value="-7,-3,-7,-3"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleSwitch">
@@ -266,7 +265,6 @@
                         <Setter Target="DeleteButton.Style" Value="{StaticResource DesktopButtonStyle}" />
                         <Setter Target="UpdateButton.Style" Value="{StaticResource DesktopButtonStyle}" />
                         <Setter Target="ConnectButton.Style" Value="{StaticResource DesktopButtonStyle}" />
-                        <Setter Target="StyleSwitcher.Style" Value="" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Mobile">
@@ -284,20 +282,20 @@
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <ProgressBar x:Name="ProgressBar" Visibility="Collapsed" Grid.Row="0" Grid.ColumnSpan="3" IsIndeterminate="True" Margin="0,3"/>
-        <TextBlock Grid.Row="1" Grid.Column="1"  x:Name="InfoText" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{ThemeResource TextStyleLargeFontSize}" TextWrapping="Wrap" Width="750" Margin="0,3"/>
-        <Button Grid.Row="1" Grid.Column="1" x:Name="ConnectButton" HorizontalAlignment="Right"  Content="connect"  Click="ConnectButton_Click" RenderTransformOrigin="0.505,0.5"/>
-        <ToggleSwitch x:Name="StyleSwitcher" OnContent="Mobile"  Grid.Row="3" Grid.Column="1" OffContent="Desktop" VerticalAlignment="Center" Width="137" Toggled="StyleSwitcher_Toggled"/>
-        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10">
+        <TextBlock Grid.Row="2" Grid.Column="1"  x:Name="InfoText" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{ThemeResource TextStyleLargeFontSize}" TextWrapping="Wrap" Width="750" Margin="0,3"/>
+        <Button Grid.Row="2" Grid.Column="1" x:Name="ConnectButton" HorizontalAlignment="Right"  Content="connect"  Click="ConnectButton_Click" RenderTransformOrigin="0.505,0.5"/>
+        <ToggleSwitch x:Name="StyleSwitcher" OnContent="Mobile"  Grid.Row="1" Grid.Column="1" OffContent="Desktop" HorizontalAlignment="Right" VerticalAlignment="Top" Width="137" Toggled="StyleSwitcher_Toggled"/>
+        <StackPanel Orientation="Vertical" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" Visibility="Collapsed" IsEnabled="False"/>
                 <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" Visibility="Collapsed" IsEnabled="False"/>

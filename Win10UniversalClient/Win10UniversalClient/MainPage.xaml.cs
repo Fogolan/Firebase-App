@@ -271,13 +271,13 @@ namespace Win10UniversalClient
 
         private void StyleSwitcher_Toggled(object sender, RoutedEventArgs e)
         {
-            if (VisualStateGroup.CurrentState.Name == "Mobile")
+            if (VisualStateGroup.CurrentState == null || VisualStateGroup.CurrentState.Name == "Desktop")
             {
-                VisualStateManager.GoToState(this, "Desktop", true);
+                VisualStateManager.GoToState(this, "Mobile", true);
             }
             else
             {
-                VisualStateManager.GoToState(this, "Mobile", true);
+                VisualStateManager.GoToState(this, "Desktop", true);
             }
         }
     }
