@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -271,13 +272,29 @@ namespace Win10UniversalClient
 
         private void StyleSwitcher_Toggled(object sender, RoutedEventArgs e)
         {
-            if (VisualStateGroup.CurrentState == null || VisualStateGroup.CurrentState.Name == "Desktop")
+            if (VisualStateGroup.CurrentState == null || VisualStateGroup.CurrentState.Name == "MouseLayout")
             {
-                VisualStateManager.GoToState(this, "Mobile", true);
+                VisualStateManager.GoToState(this, "TouchLayout", true);
+                InputPane.GetForCurrentView();
             }
             else
             {
-                VisualStateManager.GoToState(this, "Desktop", true);
+                VisualStateManager.GoToState(this, "MouseLayout", true);
+                InputPane.GetForCurrentView();
+            }
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            switch (UIViewSettings.GetForCurrentView().UserInteractionMode)
+            {
+                case UserInteractionMode.Mouse:
+                    VisualStateManager.GoToState(this, "MouseLayout", true);
+                    break;
+
+                case UserInteractionMode.Touch:
+                    VisualStateManager.GoToState(this, "TouchLayout", true);
+                    break;
             }
         }
     }

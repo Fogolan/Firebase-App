@@ -5,7 +5,7 @@
     xmlns:local="using:Win10UniversalClient"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Width="790" Height="640" MinWidth="700">
+    mc:Ignorable="d" Width="790" Height="640" MinWidth="700" SizeChanged="Page_SizeChanged">
     <Page.Resources>
         <Style TargetType="Button" x:Key="DesktopButtonStyle">
             <Setter Property="Width" Value="80" />
@@ -184,7 +184,6 @@
                                     <VisualState x:Name="Off"/>
                                     <VisualState x:Name="On">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" To="24" Storyboard.TargetProperty="X" Storyboard.TargetName="KnobTranslateTransform"/>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SwitchKnobBounds">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
                                             </ObjectAnimationUsingKeyFrames>
@@ -257,7 +256,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Grid_Loaded" Width="790" Height="640">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
-                <VisualState x:Name="Desktop">
+                <VisualState x:Name="MouseLayout">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
@@ -267,7 +266,7 @@
                         <Setter Target="ConnectButton.Style" Value="{StaticResource DesktopButtonStyle}" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Mobile">
+                <VisualState x:Name="TouchLayout">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
@@ -317,7 +316,7 @@
                                      FontStyle="Italic" 
                                      FontWeight="SemiBold"
                                      Foreground="DarkBlue"
-                                     IsReadOnly="{Binding IsReadOnly}"/>
+                                     IsReadOnly="{Binding IsReadOnly}" InputScope="Text"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
