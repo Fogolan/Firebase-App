@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -248,6 +249,7 @@ namespace Win10UniversalClient
                     if (!previousSelectedItem.IsReadOnly)
                     {
                         previousSelectedItem.IsReadOnly = true;
+                        previousSelectedItem.IsEnable = false;
                         PreviousSelectedIndex = DataList.SelectedIndex;
 
                         var data = JsonConvert.SerializeObject(DataList.Items);
@@ -264,6 +266,35 @@ namespace Win10UniversalClient
             {
                 PreviousSelectedIndex = DataList.SelectedIndex;
                 selectedItem.IsReadOnly = false;
+                selectedItem.IsEnable = true;
+            }
+        }
+
+        private void StyleSwitcher_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (VisualStateGroup.CurrentState == null || VisualStateGroup.CurrentState.Name == "MouseLayout")
+            {
+                VisualStateManager.GoToState(this, "TouchLayout", true);
+                InputPane.GetForCurrentView();
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "MouseLayout", true);
+                InputPane.GetForCurrentView();
+            }
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            switch (UIViewSettings.GetForCurrentView().UserInteractionMode)
+            {
+                case UserInteractionMode.Mouse:
+                    VisualStateManager.GoToState(this, "MouseLayout", true);
+                    break;
+
+                case UserInteractionMode.Touch:
+                    VisualStateManager.GoToState(this, "TouchLayout", true);
+                    break;
             }
         }
     }
