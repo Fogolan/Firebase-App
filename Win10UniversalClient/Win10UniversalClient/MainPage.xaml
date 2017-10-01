@@ -1,4 +1,5 @@
 ﻿<Page
+    x:Name="StartPage"
     x:Class="Win10UniversalClient.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,9 +17,6 @@
             <Setter Property="Height" Value="80" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="15,0,5,0" />
-        </Style>
-        <Style TargetType="TextBox" x:Key="MobileTextBoxStyle">
-            <Setter Property="FontSize" Value="20" />
         </Style>
         <Style x:Key="MobileSwitchStyle" TargetType="ToggleSwitch">
             <Setter Property="Foreground" Value="{ThemeResource ToggleSwitchContentForeground}"/>
@@ -279,7 +277,7 @@
                         <Setter Target="UpdateButton.Style" Value="{StaticResource MobileButtonStyle}" />
                         <Setter Target="ConnectButton.Style" Value="{StaticResource MobileButtonStyle}" />
                         <Setter Target="StyleSwitcher.Style" Value="{StaticResource MobileSwitchStyle}" />
-                        <!--<Setter Target="DataList.ItemTemplate.Style" Value="{StaticResource MobileTextBoxStyle}" />-->
+                        <Setter Target="StartPage.FontSize" Value="{ThemeResource TextStyleExtraLargeFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -296,13 +294,16 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <ProgressBar x:Name="ProgressBar" Visibility="Collapsed" Grid.Row="0" Grid.ColumnSpan="3" IsIndeterminate="True" Margin="0,3"/>
-        <TextBlock Grid.Row="2" Grid.Column="1"  x:Name="InfoText" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="{ThemeResource TextStyleLargeFontSize}" TextWrapping="Wrap" Width="750" Margin="0,3,15,3"/>
+        <TextBlock Grid.Row="2" Grid.Column="1"  x:Name="InfoText" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" Width="750" Margin="0,3,15,3"/>
         <ToggleSwitch x:Name="StyleSwitcher" OnContent="Mobile"  Grid.Row="1" Grid.Column="1" OffContent="Desktop" HorizontalAlignment="Right" VerticalAlignment="Top" Width="137" Toggled="StyleSwitcher_Toggled"/>
         <StackPanel Orientation="Vertical" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="ConnectButton"  Content="connect"  Click="ConnectButton_Click"/>
-                <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" Visibility="Collapsed" IsEnabled="False"/>
-                <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" Visibility="Collapsed" IsEnabled="False"/>
+                <Button x:Name="ConnectButton"  Content="connect"  Click="ConnectButton_Click" 
+                        FontSize= "{Binding ElementName=StartPage, Path=FontSize}"/>
+                <Button x:Name="DeleteButton" Content="delete" Click="Delete_Click" Visibility="Collapsed" IsEnabled="False"
+                        FontSize= "{Binding ElementName=StartPage, Path=FontSize}"/>
+                <Button x:Name="UpdateButton" Content="edit" Click="UpdateButton_Click" Visibility="Collapsed" IsEnabled="False"
+                        FontSize= "{Binding ElementName=StartPage, Path=FontSize}"/>
             </StackPanel>
             <ListView x:Name="DataList" HorizontalAlignment="Left" Height="620" Margin="13,10,0,0" VerticalAlignment="Top" Visibility="Collapsed"
                       CanReorderItems="True" AllowDrop="True" CanDragItems="True" ReorderMode="Enabled" CanDrag="True" DragItemsCompleted="DataList_DragItemsCompleted" SelectionChanged="DataList_SelectionChanged" Width="700" >
@@ -317,8 +318,8 @@
                                      AcceptsReturn="True"
                                      IsEnabled="{Binding IsEnable}"
                                      Margin="0,0,20,8"
-                                     FontSize="16" 
-                                     FontStyle="Italic" 
+                                     FontStyle="Italic"
+                                     FontSize= "{Binding ElementName=StartPage, Path=FontSize}"
                                      FontWeight="SemiBold"
                                      Foreground="DarkBlue"
                                      IsReadOnly="{Binding IsReadOnly}" InputScope="Text"/>
@@ -336,7 +337,8 @@
                            HorizontalAlignment="Center" 
                            VerticalAlignment="Center" 
                            TextWrapping="Wrap"
-                           FontSize="{ThemeResource TextStyleExtraLargeFontSize}" Margin="40,0,0,0"
+                           Margin="40,0,0,0"
+                           FontSize="{ThemeResource TextStyleExtraLargeFontSize}"
                 />
             </CommandBar.Content>
             <AppBarButton Icon="Cancel" Label="disconnect" Visibility="Collapsed" Click="Disconnect_Click" x:Name="DisconnectButton"/>
